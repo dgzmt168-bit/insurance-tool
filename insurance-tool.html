@@ -1,0 +1,769 @@
+f<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>平安代理人自媒体助手</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap');
+
+  :root {
+    --orange: #E85D04;
+    --orange-mid: #F48C06;
+    --orange-light: #FAA307;
+    --orange-pale: #FFBA08;
+    --red-deep: #C1121F;
+    --navy: #1B2A4A;
+    --navy-mid: #2D4270;
+    --cream: #FFFBF5;
+    --text-dark: #1B2A4A;
+    --text-mid: #3D5080;
+    --text-light: #8A9BBF;
+    --border: #E8DECE;
+    --gold: #D4A017;
+    --shadow: rgba(27,42,74,0.1);
+    --bg-warm: #FFF8EF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans SC', sans-serif; background: var(--cream); color: var(--text-dark); min-height: 100vh; }
+
+  /* ── Login ── */
+  #login-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, #1a3a6b 100%);
+    position: relative; overflow: hidden;
+  }
+  #login-screen::before {
+    content: ''; position: absolute; width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,93,4,0.15) 0%, transparent 70%);
+    top: -200px; right: -200px;
+  }
+  #login-screen::after {
+    content: ''; position: absolute; width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,160,23,0.1) 0%, transparent 70%);
+    bottom: -100px; left: -100px;
+  }
+  .login-box {
+    background: rgba(255,255,255,0.97); border-radius: 24px; padding: 52px 44px;
+    width: 380px; box-shadow: 0 30px 80px rgba(0,0,0,0.3); text-align: center;
+    position: relative; z-index: 1;
+  }
+  .login-logo { font-size: 52px; margin-bottom: 12px; }
+  .login-brand { font-size: 11px; font-weight: 600; letter-spacing: 3px; color: var(--orange); text-transform: uppercase; margin-bottom: 6px; }
+  .login-title { font-family: 'Noto Serif SC', serif; font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .login-sub { font-size: 12px; color: var(--text-light); margin-bottom: 32px; line-height: 1.6; }
+  .login-box input {
+    width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px;
+    font-size: 15px; font-family: 'Noto Sans SC', sans-serif; outline: none; margin-bottom: 14px;
+    text-align: center; letter-spacing: 4px; transition: border-color 0.2s; background: var(--bg-warm);
+  }
+  .login-box input:focus { border-color: var(--orange); }
+  .login-error { font-size: 12px; color: var(--red-deep); margin-bottom: 12px; min-height: 16px; }
+  .btn-login {
+    width: 100%; padding: 15px; background: linear-gradient(135deg, var(--orange), var(--orange-mid));
+    color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+    font-family: 'Noto Sans SC', sans-serif; cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 6px 20px rgba(232,93,4,0.35);
+  }
+  .btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(232,93,4,0.45); }
+  #app { display: none; }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, #1a3a6b 100%);
+    padding: 22px 40px; position: relative; overflow: hidden;
+  }
+  header::after {
+    content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 300px;
+    background: linear-gradient(90deg, transparent, rgba(232,93,4,0.08));
+  }
+  .header-inner { max-width: 920px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1; }
+  .logo { display: flex; align-items: center; gap: 14px; }
+  .logo-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--orange), var(--orange-mid)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 4px 12px rgba(232,93,4,0.4); }
+  .logo-text h1 { font-family: 'Noto Serif SC', serif; font-size: 18px; color: #fff; font-weight: 700; letter-spacing: 1px; }
+  .logo-text p { color: rgba(255,255,255,0.55); font-size: 11px; margin-top: 2px; letter-spacing: 0.5px; }
+  .header-badge { background: linear-gradient(135deg, var(--orange), var(--orange-pale)); color: #fff; padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+  .logout-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 7px 16px; border-radius: 20px; font-size: 12px; cursor: pointer; font-family: 'Noto Sans SC', sans-serif; transition: all 0.2s; margin-left: 10px; }
+  .logout-btn:hover { background: rgba(255,255,255,0.2); }
+
+  /* ── Nav ── */
+  .nav-wrap { background: #fff; border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 16px var(--shadow); }
+  nav { max-width: 920px; margin: 0 auto; display: flex; overflow-x: auto; }
+  nav button { flex: 1; min-width: 120px; padding: 15px 8px; border: none; background: transparent; font-family: 'Noto Sans SC', sans-serif; font-size: 12px; font-weight: 500; color: var(--text-light); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 5px; }
+  nav button:hover { color: var(--orange); background: var(--bg-warm); }
+  nav button.active { color: var(--orange); border-bottom-color: var(--orange); background: var(--bg-warm); font-weight: 700; }
+
+  /* ── Main ── */
+  main { max-width: 920px; margin: 0 auto; padding: 28px 20px 80px; }
+  .panel { display: none; animation: fadeIn 0.3s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  .panel-title { font-family: 'Noto Serif SC', serif; font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .panel-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; line-height: 1.7; }
+
+  /* ── Card ── */
+  .card { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 24px; margin-bottom: 18px; box-shadow: 0 2px 16px var(--shadow); }
+  .card-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; gap: 9px; }
+  .card-title .icon { width: 28px; height: 28px; background: linear-gradient(135deg, var(--orange), var(--orange-mid)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+
+  /* ── Form ── */
+  label { display: block; font-size: 12px; font-weight: 600; color: var(--text-mid); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+  input[type="text"], select, textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Noto Sans SC', sans-serif; font-size: 13px; color: var(--text-dark); background: var(--bg-warm); outline: none; transition: border-color 0.2s, box-shadow 0.2s; margin-bottom: 14px; }
+  input:focus, select:focus, textarea:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(232,93,4,0.1); background: #fff; }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.8; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media(max-width:560px) { .form-row { grid-template-columns: 1fr; } }
+
+  /* ── Buttons ── */
+  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 12px 24px; border-radius: 10px; border: none; font-family: 'Noto Sans SC', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-primary { background: linear-gradient(135deg, var(--orange), var(--orange-mid)); color: #fff; box-shadow: 0 4px 16px rgba(232,93,4,0.3); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(232,93,4,0.4); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: var(--bg-warm); color: var(--orange); border: 1.5px solid var(--border); }
+  .btn-secondary:hover { background: #FFE8D6; border-color: var(--orange); }
+  .btn-copy { background: var(--bg-warm); color: var(--navy); border: 1.5px solid var(--border); padding: 7px 14px; font-size: 12px; }
+  .btn-copy:hover { background: #E8F0FF; }
+
+  /* ── Output ── */
+  .output-box { background: var(--bg-warm); border: 1.5px solid var(--border); border-radius: 12px; padding: 20px; font-size: 13px; line-height: 2; color: var(--text-dark); min-height: 80px; }
+  .output-box h4 { color: var(--navy); margin: 12px 0 4px; font-size: 14px; }
+  .output-box strong { color: var(--navy); }
+  .output-box li { margin: 4px 0 4px 16px; }
+  .output-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .output-label { font-size: 11px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ── Loading ── */
+  .loading { display: flex; align-items: center; gap: 12px; color: var(--text-light); font-size: 13px; padding: 24px 0; }
+  .spinner { width: 20px; height: 20px; border: 2px solid #FFE8D6; border-top-color: var(--orange); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Topic List ── */
+  .topic-list { display: flex; flex-direction: column; gap: 10px; }
+  .topic-item { background: #fff; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 18px; cursor: pointer; transition: all 0.2s; position: relative; }
+  .topic-item:hover { border-color: var(--orange); box-shadow: 0 4px 16px var(--shadow); transform: translateY(-1px); }
+  .topic-item.selected { border-color: var(--orange); background: var(--bg-warm); }
+  .topic-num { display: inline-block; background: linear-gradient(135deg, var(--orange), var(--orange-mid)); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 20px; margin-bottom: 7px; }
+  .topic-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 5px; line-height: 1.5; }
+  .topic-angle { font-size: 12px; color: var(--text-light); line-height: 1.7; }
+  .topic-check { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; opacity: 0.15; }
+  .topic-item.selected .topic-check { opacity: 1; }
+
+  /* ── IP Quiz ── */
+  .quiz-step { display: none; }
+  .quiz-step.active { display: block; animation: fadeIn 0.3s ease; }
+  .ip-step-badge { display: inline-block; background: linear-gradient(135deg, var(--orange), var(--orange-mid)); color: #fff; font-size: 11px; font-weight: 700; padding: 3px 14px; border-radius: 20px; margin-bottom: 12px; letter-spacing: 1px; }
+  .quiz-q { font-family: 'Noto Serif SC', serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 6px; line-height: 1.5; }
+  .quiz-hint { font-size: 12px; color: var(--text-light); margin-bottom: 18px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .quiz-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  @media(max-width:480px) { .quiz-options-grid { grid-template-columns: 1fr; } }
+  .quiz-option { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; cursor: pointer; font-size: 13px; color: var(--text-mid); transition: all 0.2s; background: #fff; }
+  .quiz-option:hover { border-color: var(--orange); background: var(--bg-warm); transform: translateY(-1px); box-shadow: 0 4px 12px var(--shadow); }
+  .quiz-option.selected { border-color: var(--orange); background: var(--bg-warm); color: var(--navy); }
+  .quiz-option .opt-check { width: 18px; height: 18px; min-width: 18px; border: 2px solid var(--border); border-radius: 4px; margin-top: 1px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+  .quiz-option.selected .opt-check { background: var(--orange); border-color: var(--orange); }
+  .quiz-option.selected .opt-check::after { content: ''; width: 10px; height: 8px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 8'%3E%3Cpath d='M1 4l2.5 3L9 1' stroke='white' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-size: contain; background-repeat: no-repeat; }
+  .quiz-option.single .opt-check { border-radius: 50%; }
+  .quiz-option.single.selected .opt-check::after { width: 8px; height: 8px; border-radius: 50%; background: #fff; background-image: none; }
+  .opt-body { flex: 1; }
+  .opt-main { font-size: 13px; font-weight: 600; line-height: 1.5; }
+  .opt-sub { font-size: 11px; color: var(--text-light); margin-top: 2px; line-height: 1.5; }
+  .opt-emoji { font-size: 18px; min-width: 22px; margin-top: 1px; }
+  .progress-bar { height: 5px; background: #FFE8D6; border-radius: 3px; margin-bottom: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--orange), var(--orange-pale)); border-radius: 3px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+  .step-dots { display: flex; gap: 5px; margin-bottom: 24px; }
+  .step-dot { width: 6px; height: 6px; border-radius: 50%; background: #FFE8D6; transition: all 0.3s; }
+  .step-dot.done { background: var(--orange-mid); }
+  .step-dot.active { background: var(--orange); width: 20px; border-radius: 3px; }
+
+  /* ── Data Grid ── */
+  .data-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
+  @media(max-width:500px) { .data-grid { grid-template-columns: 1fr; } }
+  .data-item label { font-size: 11px; margin-bottom: 4px; }
+  .data-item input { margin-bottom: 0; }
+  .divider { height: 1px; background: var(--border); margin: 18px 0; }
+
+  /* ── Tip ── */
+  .tip { background: #FFF3E8; border-left: 3px solid var(--orange); border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 12px; color: var(--text-mid); line-height: 1.8; margin-bottom: 16px; }
+
+  /* ── Story Card ── */
+  .story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media(max-width:560px) { .story-grid { grid-template-columns: 1fr; } }
+  .story-card { background: var(--bg-warm); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s; }
+  .story-card:hover { border-color: var(--orange); transform: translateY(-2px); box-shadow: 0 6px 16px var(--shadow); }
+  .story-card.selected { border-color: var(--orange); background: #FFF0E5; }
+  .story-tag { display: inline-block; background: var(--orange); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 20px; margin-bottom: 8px; }
+  .story-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .story-desc { font-size: 12px; color: var(--text-light); line-height: 1.6; }
+
+  /* ── Nav Btns ── */
+  .nav-btns { display: flex; gap: 10px; }
+
+  /* ── Compliance badge ── */
+  .compliance-ok { background: #E8F8F0; border: 1px solid #4CAF50; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #2E7D32; margin-top: 10px; }
+  .compliance-warn { background: #FFF3E0; border: 1px solid var(--orange); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: var(--orange); margin-top: 10px; }
+
+  /* ── Toast ── */
+  .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff; padding: 10px 26px; border-radius: 30px; font-size: 13px; font-weight: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- 登录页 -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">🛡️</div>
+    <div class="login-brand">Ping An · 平安</div>
+    <div class="login-title">代理人自媒体助手</div>
+    <div class="login-sub">今日热点 · 口播文案 · 合规检查 · IP打造</div>
+    <input type="password" id="access-input" placeholder="请输入访问码" maxlength="20">
+    <div class="login-error" id="login-error"></div>
+    <button class="btn-login" onclick="doLogin()">进入工具</button>
+  </div>
+</div>
+
+<!-- 主应用 -->
+<div id="app">
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">🛡️</div>
+        <div class="logo-text">
+          <h1>平安代理人自媒体助手</h1>
+          <p>今日热点 · 口播文案 · 合规检查 · IP打造</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="header-badge">PING AN PRO</div>
+        <button class="logout-btn" onclick="doLogout()">退出</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-wrap">
+    <nav>
+      <button class="active" onclick="switchTab('hotspot',this)">🔥 今日热点</button>
+      <button onclick="switchTab('script',this)">✍️ 口播文案</button>
+      <button onclick="switchTab('story',this)">📖 观念故事</button>
+      <button onclick="switchTab('rebuttal',this)">💬 话术转文案</button>
+      <button onclick="switchTab('data',this)">📊 数据复盘</button>
+      <button onclick="switchTab('ip',this)">🎯 IP梳理</button>
+    </nav>
+  </div>
+
+  <main>
+    <!-- 今日热点 -->
+    <div id="panel-hotspot" class="panel active">
+      <div class="panel-title">今日金融保险热点</div>
+      <div class="panel-subtitle">实时搜索今日金融、保险、理财热点新闻，快速找到今天可以借势的选题。</div>
+      <div class="card">
+        <div class="card-title"><div class="icon">🎯</div>选择热点方向</div>
+        <div class="form-row">
+          <div>
+            <label>热点方向</label>
+            <select id="direction">
+              <option>保险观念与保障</option>
+              <option>金融理财热点</option>
+              <option>健康医疗资讯</option>
+              <option>社保政策动态</option>
+              <option>家庭财富规划</option>
+            </select>
+          </div>
+          <div>
+            <label>目标受众</label>
+            <select id="audience">
+              <option>中年家庭（35-50岁）</option>
+              <option>年轻白领（25-35岁）</option>
+              <option>企业主/高净值</option>
+              <option>宝妈群体</option>
+              <option>退休人群</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="getHotspot()" id="btn-hotspot">🔍 搜索今日热点</button>
+      </div>
+      <div id="hotspot-loading" style="display:none"><div class="loading"><div class="spinner"></div>正在搜索今日金融保险热点...</div></div>
+      <div id="hotspot-result" style="display:none">
+        <div class="card-title" style="margin-bottom:12px"><div class="icon">📰</div>今日热点（点击选择选题）</div>
+        <div class="topic-list" id="topic-list"></div>
+        <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="goToScript()" id="btn-to-script" style="display:none">✍️ 生成口播文案</button>
+          <button class="btn btn-secondary" onclick="getHotspot()">🔄 重新搜索</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 口播文案 -->
+    <div id="panel-script" class="panel">
+      <div class="panel-title">口播文案生成</div>
+      <div class="panel-subtitle">一键生成保险观念口播文案，只讲理念不涉及产品参数，自带合规检查。</div>
+      <div class="card">
+        <div class="card-title"><div class="icon">📝</div>文案配置</div>
+        <label>选题 / 主题</label>
+        <textarea id="script-topic" placeholder="例如：为什么越来越多的年轻人开始重视重疾险？&#10;或粘贴今日热点标题..." rows="3"></textarea>
+        <div class="form-row">
+          <div>
+            <label>目标受众</label>
+            <select id="script-audience">
+              <option>中年家庭（35-50岁）</option>
+              <option>年轻白领（25-35岁）</option>
+              <option>企业主/高净值</option>
+              <option>宝妈群体</option>
+              <option>退休人群</option>
+            </select>
+          </div>
+          <div>
+            <label>视频时长</label>
+            <select id="script-duration">
+              <option>60秒以内</option>
+              <option selected>80秒左右</option>
+              <option>90秒左右</option>
+            </select>
+          </div>
+        </div>
+        <label>保险观念方向（选填）</label>
+        <select id="script-concept" style="margin-bottom:14px">
+          <option value="">自动判断</option>
+          <option>重疾险——健康保障的重要性</option>
+          <option>寿险——对家人责任的体现</option>
+          <option>年金险——未来现金流的规划</option>
+          <option>医疗险——看病无忧的底气</option>
+          <option>保险观念——风险意识的觉醒</option>
+        </select>
+        <label>博主人设（选填）</label>
+        <input type="text" id="script-persona" placeholder="例如：10年平安资深代理人，服务500+家庭">
+        <button class="btn btn-primary" onclick="generateScript()" id="btn-script">✨ 生成口播文案</button>
+      </div>
+      <div id="script-loading" style="display:none"><div class="loading"><div class="spinner"></div>正在生成文案并进行合规检查...</div></div>
+      <div id="script-result" style="display:none">
+        <div class="card">
+          <div class="output-header"><div class="output-label">🎬 口播文案</div><button class="btn btn-copy" onclick="copyEl('script-output')">📋 复制</button></div>
+          <div class="output-box" id="script-output"></div>
+        </div>
+        <div class="card">
+          <div class="output-header"><div class="output-label">📱 封面标题 + 发布描述</div><button class="btn btn-copy" onclick="copyEl('publish-output')">📋 复制</button></div>
+          <div class="output-box" id="publish-output"></div>
+        </div>
+        <div class="card">
+          <div class="output-header"><div class="output-label">🔍 合规检查报告</div><button class="btn btn-copy" onclick="copyEl('check-output')">📋 复制</button></div>
+          <div class="output-box" id="check-output"></div>
+        </div>
+        <button class="btn btn-secondary" onclick="generateScript()">🔄 重新生成</button>
+      </div>
+    </div>
+
+    <!-- 观念故事库 -->
+    <div id="panel-story" class="panel">
+      <div class="panel-title">保险观念故事库</div>
+      <div class="panel-subtitle">选择场景，一键生成真实感强的保险观念故事脚本，不涉及产品参数，只讲人性和理念。</div>
+      <div class="card">
+        <div class="card-title"><div class="icon">📖</div>选择故事场景</div>
+        <div class="tip">💡 好的保险故事不推产品，只触动人心。选择一个场景，让观众自己感受到保险的价值。</div>
+        <div class="story-grid" id="story-grid">
+          <div class="story-card" onclick="selectStory(this,'重疾突袭——一场病改变了一个家庭的轨迹')">
+            <div class="story-tag">重疾</div>
+            <div class="story-name">一场病改变了一切</div>
+            <div class="story-desc">讲述普通家庭遭遇重大疾病后的困境与转变</div>
+          </div>
+          <div class="story-card" onclick="selectStory(this,'意外离开——那个没有留下保障的爸爸')">
+            <div class="story-tag">寿险</div>
+            <div class="story-name">没有留下保障的爸爸</div>
+            <div class="story-desc">家庭支柱意外离去，留下的责任与遗憾</div>
+          </div>
+          <div class="story-card" onclick="selectStory(this,'退休危机——辛苦一辈子，老了却要靠儿女')">
+            <div class="story-tag">年金</div>
+            <div class="story-name">辛苦一辈子的退休危机</div>
+            <div class="story-desc">没有规划现金流，退休后的真实困境</div>
+          </div>
+          <div class="story-card" onclick="selectStory(this,'看病的勇气——有了保障，才敢去医院检查')">
+            <div class="story-tag">医疗</div>
+            <div class="story-name">有保障才敢去看病</div>
+            <div class="story-desc">因为没有保障，很多人选择扛着不去看病</div>
+          </div>
+          <div class="story-card" onclick="selectStory(this,'年轻时的侥幸——总觉得风险不会落在自己头上')">
+            <div class="story-tag">观念</div>
+            <div class="story-name">年轻时的侥幸心理</div>
+            <div class="story-desc">我们总觉得风险是别人的事，直到它发生</div>
+          </div>
+          <div class="story-card" onclick="selectStory(this,'给孩子最好的礼物——不是学区房，是抵御风险的能力')">
+            <div class="story-tag">亲子</div>
+            <div class="story-name">给孩子最好的礼物</div>
+            <div class="story-desc">真正爱孩子，是给他留下抵御风险的底气</div>
+          </div>
+        </div>
+        <label>目标受众</label>
+        <select id="story-audience" style="margin-bottom:14px">
+          <option>中年家庭（35-50岁）</option>
+          <option>年轻白领（25-35岁）</option>
+          <option>企业主/高净值</option>
+          <option>宝妈群体</option>
+        </select>
+        <label>博主人设（选填）</label>
+        <input type="text" id="story-persona" placeholder="例如：平安代理人，见过太多家庭因为有保障而化险为夷">
+        <button class="btn btn-primary" onclick="generateStory()" id="btn-story">📖 生成故事脚本</button>
+      </div>
+      <div id="story-loading" style="display:none"><div class="loading"><div class="spinner"></div>正在生成保险观念故事脚本...</div></div>
+      <div id="story-result" style="display:none">
+        <div class="card">
+          <div class="output-header"><div class="output-label">📖 故事口播脚本</div><button class="btn btn-copy" onclick="copyEl('story-output')">📋 复制</button></div>
+          <div class="output-box" id="story-output"></div>
+        </div>
+        <button class="btn btn-secondary" onclick="generateStory()">🔄 重新生成</button>
+      </div>
+    </div>
+
+    <!-- 话术转文案 -->
+    <div id="panel-rebuttal" class="panel">
+      <div class="panel-title">客户异议 → 视频文案</div>
+      <div class="panel-subtitle">把客户最常见的拒绝理由，转化成有温度的视频口播内容，用故事化解偏见。</div>
+      <div class="card">
+        <div class="card-title"><div class="icon">💬</div>选择常见异议</div>
+        <div class="quiz-options" id="rebuttal-opts">
+          <div class="quiz-option" onclick="selectRebuttal(this)"><div class="opt-emoji">🙅</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">我不需要保险，我身体很好</div><div class="opt-sub">侥幸心理，觉得风险离自己很远</div></div></div>
+          <div class="quiz-option" onclick="selectRebuttal(this)"><div class="opt-emoji">💸</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">保险太贵了，交的钱还不如存银行</div><div class="opt-sub">对保险价值和收益有误解</div></div></div>
+          <div class="quiz-option" onclick="selectRebuttal(this)"><div class="opt-emoji">😤</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">保险都是骗人的，理赔很麻烦</div><div class="opt-sub">对保险行业有偏见和不信任</div></div></div>
+          <div class="quiz-option" onclick="selectRebuttal(this)"><div class="opt-emoji">🕐</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">等我有钱了再买，现在还早</div><div class="opt-sub">拖延心态，不了解保险的时间价值</div></div></div>
+          <div class="quiz-option" onclick="selectRebuttal(this)"><div class="opt-emoji">👴</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">有社保就够了，不需要商业保险</div><div class="opt-sub">对社保保障范围有误解</div></div></div>
+          <div class="quiz-option" onclick="selectRebuttal(this)"><div class="opt-emoji">😟</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">买了保险感觉在给自己不幸算命</div><div class="opt-sub">心理上抗拒谈论风险和意外</div></div></div>
+        </div>
+        <label style="margin-top:4px">目标受众</label>
+        <select id="rebuttal-audience" style="margin-bottom:14px">
+          <option>中年家庭（35-50岁）</option>
+          <option>年轻白领（25-35岁）</option>
+          <option>宝妈群体</option>
+          <option>企业主</option>
+        </select>
+        <button class="btn btn-primary" onclick="generateRebuttal()" id="btn-rebuttal">💬 生成视频文案</button>
+      </div>
+      <div id="rebuttal-loading" style="display:none"><div class="loading"><div class="spinner"></div>正在生成异议化解视频文案...</div></div>
+      <div id="rebuttal-result" style="display:none">
+        <div class="card">
+          <div class="output-header"><div class="output-label">🎬 视频口播文案</div><button class="btn btn-copy" onclick="copyEl('rebuttal-output')">📋 复制</button></div>
+          <div class="output-box" id="rebuttal-output"></div>
+        </div>
+        <button class="btn btn-secondary" onclick="generateRebuttal()">🔄 重新生成</button>
+      </div>
+    </div>
+
+    <!-- 数据复盘 -->
+    <div id="panel-data" class="panel">
+      <div class="panel-title">数据复盘 & 优化建议</div>
+      <div class="panel-subtitle">输入视频数据，获取深度分析和针对保险内容的具体优化方向。</div>
+      <div class="card">
+        <div class="card-title"><div class="icon">📊</div>输入视频数据</div>
+        <div class="tip">💡 可同时输入多条视频进行对比分析，找出哪类保险内容最受欢迎。</div>
+        <div id="data-entries">
+          <div class="data-entry">
+            <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:10px">视频 1</div>
+            <label>视频主题</label>
+            <input type="text" class="entry-topic" placeholder="例如：为什么年轻人更需要重疾险">
+            <div class="data-grid">
+              <div class="data-item"><label>播放量</label><input type="text" class="entry-views" placeholder="2048"></div>
+              <div class="data-item"><label>完播率</label><input type="text" class="entry-completion" placeholder="22%"></div>
+              <div class="data-item"><label>3s播放率</label><input type="text" class="entry-3s" placeholder="68%"></div>
+              <div class="data-item"><label>平均时长</label><input type="text" class="entry-avgtime" placeholder="32秒"></div>
+              <div class="data-item"><label>点赞数</label><input type="text" class="entry-likes" placeholder="45"></div>
+              <div class="data-item"><label>新增关注</label><input type="text" class="entry-follows" placeholder="8"></div>
+            </div>
+            <div class="divider"></div>
+          </div>
+        </div>
+        <button class="btn btn-secondary" onclick="addEntry()" style="margin-bottom:14px">➕ 添加视频</button>
+        <label>补充说明（选填）</label>
+        <textarea id="data-extra" placeholder="例如：这条讲的是重疾险观念 / 用了故事开头..." rows="2"></textarea>
+        <button class="btn btn-primary" onclick="analyzeData()" id="btn-data">📊 开始分析</button>
+      </div>
+      <div id="data-loading" style="display:none"><div class="loading"><div class="spinner"></div>正在分析数据...</div></div>
+      <div id="data-result" style="display:none">
+        <div class="card">
+          <div class="output-header"><div class="output-label">📈 数据分析报告</div><button class="btn btn-copy" onclick="copyEl('data-output')">📋 复制</button></div>
+          <div class="output-box" id="data-output"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IP梳理 -->
+    <div id="panel-ip" class="panel">
+      <div class="panel-title">保险代理人 IP 定位梳理</div>
+      <div class="panel-subtitle">回答 7 个问题，生成专属IP定位报告，找到你在保险自媒体赛道的差异化定位。</div>
+      <div id="ip-quiz-wrap">
+        <div class="card">
+          <div class="progress-bar"><div class="progress-fill" id="ip-progress" style="width:0%"></div></div>
+          <div class="step-dots" id="ip-dots"></div>
+
+          <div class="quiz-step active" id="ip-step-1">
+            <div class="ip-step-badge">STEP 01 / 07</div>
+            <div class="quiz-q">你在平安从业多久了？</div>
+            <div class="quiz-hint">单选，从业年限影响内容权威感</div>
+            <div class="quiz-options" id="ip-opts-1">
+              <div class="quiz-option single" onclick="ipSingle(this,'ip-opts-1')"><div class="opt-emoji">🌱</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">1年以内（新人）</div><div class="opt-sub">成长型人设，真实感强</div></div></div>
+              <div class="quiz-option single" onclick="ipSingle(this,'ip-opts-1')"><div class="opt-emoji">📈</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">1-3年</div><div class="opt-sub">积累期，有真实服务案例</div></div></div>
+              <div class="quiz-option single" onclick="ipSingle(this,'ip-opts-1')"><div class="opt-emoji">💼</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">3-8年</div><div class="opt-sub">资深顾问，见过很多家庭故事</div></div></div>
+              <div class="quiz-option single" onclick="ipSingle(this,'ip-opts-1')"><div class="opt-emoji">🏆</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">8年以上</div><div class="opt-sub">行业老兵，权威感极强</div></div></div>
+            </div>
+            <div class="nav-btns"><button class="btn btn-primary" onclick="ipNext(1)">下一步 →</button></div>
+          </div>
+
+          <div class="quiz-step" id="ip-step-2">
+            <div class="ip-step-badge">STEP 02 / 07</div>
+            <div class="quiz-q">你的性别和外在特征？</div>
+            <div class="quiz-hint">多选</div>
+            <div class="quiz-options-grid" id="ip-opts-2">
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">👨 男性</div><div class="opt-sub">理性分析型，适合讲逻辑</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">👩 女性</div><div class="opt-sub">感性共情型，讲故事更有力</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">🎯 精英干练感</div><div class="opt-sub">专业可信度高</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">😊 亲切邻家感</div><div class="opt-sub">容易建立信任</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">👨‍👩‍👧 已婚有孩</div><div class="opt-sub">家庭保障话题更有说服力</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">🌟 年轻活力</div><div class="opt-sub">吸引年轻客群</div></div></div>
+            </div>
+            <div class="nav-btns"><button class="btn btn-secondary" onclick="ipPrev(2)">← 上一步</button><button class="btn btn-primary" onclick="ipNext(2)">下一步 →</button></div>
+          </div>
+
+          <div class="quiz-step" id="ip-step-3">
+            <div class="ip-step-badge">STEP 03 / 07</div>
+            <div class="quiz-q">你有哪些真实经历或背景？</div>
+            <div class="quiz-hint">多选，真实经历是最强的信任背书</div>
+            <div class="quiz-options" id="ip-opts-3">
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-emoji">💔</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">自己或家人经历过理赔</div><div class="opt-sub">亲身经历，说服力极强</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-emoji">🏢</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">有其他行业背景后转型</div><div class="opt-sub">跨行人设，有独特视角</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-emoji">👨‍👩‍👧‍👦</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">帮助过很多家庭获得保障</div><div class="opt-sub">有真实客户故事可讲</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-emoji">📚</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">持续学习，考取多个资质</div><div class="opt-sub">专业背书，增加权威感</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-emoji">🏆</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">获得过公司荣誉/奖项</div><div class="opt-sub">外部认可，增加可信度</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-emoji">💡</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">自己认真规划过家庭保障</div><div class="opt-sub">身体力行，知行合一</div></div></div>
+            </div>
+            <div class="nav-btns"><button class="btn btn-secondary" onclick="ipPrev(3)">← 上一步</button><button class="btn btn-primary" onclick="ipNext(3)">下一步 →</button></div>
+          </div>
+
+          <div class="quiz-step" id="ip-step-4">
+            <div class="ip-step-badge">STEP 04 / 07</div>
+            <div class="quiz-q">最擅长或最想做的内容方向？</div>
+            <div class="quiz-hint">多选，选2-3个核心方向</div>
+            <div class="quiz-options-grid" id="ip-opts-4">
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">🏥 重疾与健康保障</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">👨‍👩‍👧 家庭财务规划</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">💰 养老与退休规划</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">🧒 儿童保障规划</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">🏦 保险与理财结合</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">💼 企业主风险管理</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">📖 理赔案例故事</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-check"></div><div class="opt-body"><div class="opt-main">🔍 保险知识科普</div></div></div>
+            </div>
+            <div class="nav-btns"><button class="btn btn-secondary" onclick="ipPrev(4)">← 上一步</button><button class="btn btn-primary" onclick="ipNext(4)">下一步 →</button></div>
+          </div>
+
+          <div class="quiz-step" id="ip-step-5">
+            <div class="ip-step-badge">STEP 05 / 07</div>
+            <div class="quiz-q">你希望呈现的内容风格？</div>
+            <div class="quiz-hint">单选</div>
+            <div class="quiz-options" id="ip-opts-5">
+              <div class="quiz-option single" onclick="ipSingle(this,'ip-opts-5')"><div class="opt-emoji">📖</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">故事叙述型</div><div class="opt-sub">用真实故事触动人心，情感共鸣</div></div></div>
+              <div class="quiz-option single" onclick="ipSingle(this,'ip-opts-5')"><div class="opt-emoji">🔬</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">专业权威型</div><div class="opt-sub">数据说话，专业分析，建立专家形象</div></div></div>
+              <div class="quiz-option single" onclick="ipSingle(this,'ip-opts-5')"><div class="opt-emoji">☕</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">生活接地气型</div><div class="opt-sub">像朋友聊天，亲切自然</div></div></div>
+              <div class="quiz-option single" onclick="ipSingle(this,'ip-opts-5')"><div class="opt-emoji">🔥</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">观点犀利型</div><div class="opt-sub">直击痛点，说出大家不敢说的真相</div></div></div>
+            </div>
+            <div class="nav-btns"><button class="btn btn-secondary" onclick="ipPrev(5)">← 上一步</button><button class="btn btn-primary" onclick="ipNext(5)">下一步 →</button></div>
+          </div>
+
+          <div class="quiz-step" id="ip-step-6">
+            <div class="ip-step-badge">STEP 06 / 07</div>
+            <div class="quiz-q">做自媒体的核心目标？</div>
+            <div class="quiz-hint">多选</div>
+            <div class="quiz-options" id="ip-opts-6">
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-emoji">👥</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">获客引流，增加新客户</div><div class="opt-sub">通过内容让陌生人主动找你</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-emoji">🤝</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">维护老客户，增加转介绍</div><div class="opt-sub">让老客户持续看到你，保持联系</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-emoji">🌍</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">传播保险观念，做公益</div><div class="opt-sub">让更多人了解保险的意义</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-emoji">🏅</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">建立行业内的专业口碑</div><div class="opt-sub">成为业内认可的保险IP</div></div></div>
+              <div class="quiz-option" onclick="ipToggle(this)"><div class="opt-emoji">📈</div><div class="opt-check"></div><div class="opt-body"><div class="opt-main">招募团队，扩大组织</div><div class="opt-sub">通过内容吸引有志加入保险的人</div></div></div>
+            </div>
+            <div class="nav-btns"><button class="btn btn-secondary" onclick="ipPrev(6)">← 上一步</button><button class="btn btn-primary" onclick="ipNext(6)">下一步 →</button></div>
+          </div>
+
+          <div class="quiz-step" id="ip-step-7">
+            <div class="ip-step-badge">STEP 07 / 07</div>
+            <div class="quiz-q">最后，告诉我更多关于你的信息</div>
+            <div class="quiz-hint">越具体越好，这是生成差异化定位的关键</div>
+            <div class="tip">💡 可以写：你的从业故事、你帮助过的印象深刻的客户、你为什么做保险、你和同行有什么不同……</div>
+            <label>你的名字 / 昵称（选填）</label>
+            <input type="text" id="ip-name" placeholder="例如：李想、保险顾问小王">
+            <label>主要面向的客群</label>
+            <input type="text" id="ip-audience-input" placeholder="例如：中年家庭、年轻白领、企业主">
+            <label>你觉得自己最大的差异化是什么？</label>
+            <textarea id="ip-diff" placeholder="例如：我是95后女代理人，有过亲身理赔经历，做保险8年服务了300+家庭，擅长讲真实故事…" rows="3"></textarea>
+            <label>其他补充（选填）</label>
+            <textarea id="ip-extra" placeholder="例如：我想主攻视频号、我的客户主要是身边朋友转介绍…" rows="2"></textarea>
+            <div class="nav-btns">
+              <button class="btn btn-secondary" onclick="ipPrev(7)">← 上一步</button>
+              <button class="btn btn-primary" onclick="generateIP()" id="btn-ip">🎯 生成IP定位报告</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="ip-loading" style="display:none"><div class="loading"><div class="spinner"></div>正在深度分析你的保险IP定位...</div></div>
+      <div id="ip-result" style="display:none">
+        <div class="card">
+          <div class="output-header"><div class="output-label">🎯 IP定位报告</div><button class="btn btn-copy" onclick="copyEl('ip-output')">📋 复制</button></div>
+          <div class="output-box" id="ip-output"></div>
+        </div>
+        <button class="btn btn-secondary" onclick="resetIP()" style="margin-top:4px">🔄 重新梳理</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast">✅ 已复制到剪贴板</div>
+
+<script>
+  let accessCode = '';
+  const API_ENDPOINT = 'https://nutrition-api-xfwnyqpxkc.cn-hangzhou.fcapp.run';
+
+  function doLogin() {
+    const input = document.getElementById('access-input').value.trim();
+    if (!input) { document.getElementById('login-error').textContent = '请输入访问码'; return; }
+    accessCode = input;
+    fetch(API_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-access-code': accessCode },
+      body: JSON.stringify({ messages: [{ role: 'user', content: 'hi' }], system: '' })
+    }).then(r => {
+      if (r.status === 401) { document.getElementById('login-error').textContent = '访问码错误'; accessCode = ''; }
+      else { document.getElementById('login-screen').style.display = 'none'; document.getElementById('app').style.display = 'block'; }
+    }).catch(() => { document.getElementById('login-error').textContent = '网络连接失败'; accessCode = ''; });
+  }
+  document.getElementById('access-input').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  function doLogout() { accessCode = ''; document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app').style.display = 'none'; document.getElementById('access-input').value = ''; }
+  function switchTab(tab, btn) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('nav button').forEach(b => b.classList.remove('active')); document.getElementById('panel-' + tab).classList.add('active'); btn.classList.add('active'); }
+  function copyEl(id) { navigator.clipboard.writeText(document.getElementById(id).innerText).then(() => { const t = document.getElementById('toast'); t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }); }
+
+  function renderMd(text) {
+    return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/^### (.+)$/gm, '<h4 style="color:var(--navy);margin:14px 0 6px;font-size:15px">$1</h4>').replace(/^- (.+)$/gm, '<li style="margin:4px 0 4px 16px">$1</li>').replace(/\n/g, '<br>');
+  }
+
+  async function callAPI(messages, system, extra) {
+    const body = Object.assign({ messages, system }, extra || {});
+    const res = await fetch(API_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-access-code': accessCode }, body: JSON.stringify(body) });
+    if (!res.ok) { const err = await res.json(); throw new Error(err.error || '请求失败'); }
+    const data = await res.json();
+    return data.content?.map(c => c.text || '').join('') || '';
+  }
+
+  function setLoading(l, r, b, show) { document.getElementById(l).style.display = show ? 'block' : 'none'; if (!show) document.getElementById(r).style.display = 'block'; if (b) document.getElementById(b).disabled = show; }
+
+  // ══ 今日热点 ══
+  let selectedTopic = null;
+  async function getHotspot() {
+    const audience = document.getElementById('audience').value;
+    const direction = document.getElementById('direction').value;
+    const today = new Date().toLocaleDateString('zh-CN');
+    document.getElementById('hotspot-loading').style.display = 'block';
+    document.getElementById('hotspot-result').style.display = 'none';
+    document.getElementById('btn-hotspot').disabled = true;
+    selectedTopic = null;
+    document.getElementById('btn-to-script').style.display = 'none';
+    try {
+      const text = await callAPI([{ role: 'user', content: '今天是'+today+'。请整理今天最新的5条相关热点，方向：「'+direction+'」，受众：「'+audience+'」。\n\n每条按格式输出：\n【热点N】标题\n新闻简述（1-2句）\n👉 选题角度：保险代理人可以怎么借势这个话题做视频\n\n内容真实、时效性强，角度要有利于传播保险保障理念。' }], '你是资深保险自媒体内容策划，精通金融保险领域，善于从热点新闻中找到传播保险观念的切入点。请用中文回复。', { hotspot: true, audience, direction });
+      renderTopics(text);
+    } catch(e) { renderTopics('获取失败：' + e.message); }
+    finally { document.getElementById('hotspot-loading').style.display = 'none'; document.getElementById('hotspot-result').style.display = 'block'; document.getElementById('btn-hotspot').disabled = false; }
+  }
+
+  function renderTopics(text) {
+    const list = document.getElementById('topic-list'); list.innerHTML = '';
+    const blocks = text.split(/【热点\d+】/).filter(b => b.trim());
+    if (!blocks.length) { list.innerHTML = '<div class="output-box">'+text+'</div>'; return; }
+    blocks.forEach((block, i) => {
+      const lines = block.trim().split('\n').filter(l => l.trim()), title = lines[0]||'', rest = lines.slice(1).join('\n');
+      const div = document.createElement('div'); div.className = 'topic-item';
+      div.innerHTML = '<div class="topic-num">热点 '+(i+1)+'</div><div class="topic-title">'+title+'</div><div class="topic-angle">'+rest+'</div><div class="topic-check">✅</div>';
+      div.onclick = () => { document.querySelectorAll('.topic-item').forEach(t => t.classList.remove('selected')); div.classList.add('selected'); selectedTopic = title+'\n'+rest; document.getElementById('btn-to-script').style.display = 'inline-flex'; };
+      list.appendChild(div);
+    });
+  }
+
+  function goToScript() { if (!selectedTopic) return; document.getElementById('script-topic').value = selectedTopic; document.getElementById('script-audience').value = document.getElementById('audience').value; document.querySelectorAll('nav button')[1].click(); }
+
+  // ══ 口播文案 ══
+  async function generateScript() {
+    const topic = document.getElementById('script-topic').value.trim(); if (!topic) { alert('请先输入选题！'); return; }
+    setLoading('script-loading', 'script-result', 'btn-script', true); document.getElementById('script-result').style.display = 'none';
+    try {
+      const concept = document.getElementById('script-concept').value;
+      const text = await callAPI([{ role: 'user', content: '写一篇保险代理人视频号口播文案：\n选题：'+topic+'\n受众：'+document.getElementById('script-audience').value+'\n时长：'+document.getElementById('script-duration').value+'\n保险观念方向：'+(concept||'自动判断')+'\n人设：'+(document.getElementById('script-persona').value||'平安保险资深代理人')+'\n\n要求：\n1. 只讲保险观念和理念，不提任何具体产品名称和参数\n2. 用故事化方式开头，引发情感共鸣\n3. 结构：强钩子开头→引出观念→故事/案例→感悟→引导关注\n4. 语言口语化、有温度、不说教\n\n输出文案后用===PUBLISH===分隔输出封面标题和发布描述，再用===CHECK===分隔输出合规检查（检查是否有违规承诺收益、虚假宣传、产品参数等风险词）。' }], '你是资深保险自媒体文案专家，精通保险观念传播，善于用故事触动人心。文案不涉及具体产品参数，只传递保障理念。请用中文回复。');
+      const s1 = text.indexOf('===PUBLISH==='), s2 = text.indexOf('===CHECK===');
+      document.getElementById('script-output').innerHTML = renderMd(s1 > -1 ? text.slice(0, s1).trim() : text);
+      document.getElementById('publish-output').innerHTML = renderMd(s1 > -1 ? (s2 > -1 ? text.slice(s1+13, s2).trim() : text.slice(s1+13).trim()) : '');
+      document.getElementById('check-output').innerHTML = renderMd(s2 > -1 ? text.slice(s2+11).trim() : '');
+    } catch(e) { document.getElementById('script-output').innerText = '生成失败：'+e.message; }
+    finally { setLoading('script-loading', 'script-result', 'btn-script', false); }
+  }
+
+  // ══ 观念故事 ══
+  let selectedStoryTheme = '';
+  function selectStory(el, theme) { document.querySelectorAll('.story-card').forEach(c => c.classList.remove('selected')); el.classList.add('selected'); selectedStoryTheme = theme; }
+  async function generateStory() {
+    if (!selectedStoryTheme) { alert('请先选择一个故事场景！'); return; }
+    setLoading('story-loading', 'story-result', 'btn-story', true); document.getElementById('story-result').style.display = 'none';
+    try {
+      const text = await callAPI([{ role: 'user', content: '请写一篇保险观念故事口播脚本：\n场景主题：'+selectedStoryTheme+'\n目标受众：'+document.getElementById('story-audience').value+'\n人设：'+(document.getElementById('story-persona').value||'平安保险代理人')+'\n\n要求：\n1. 用第一人称或旁观者视角讲一个真实感强的故事\n2. 不提任何保险产品名称和具体参数\n3. 通过故事自然传递"有保障"和"没保障"的对比\n4. 结尾引发思考，不说教，让观众自己得出结论\n5. 80秒左右，口语化\n6. 有时间轴标注' }], '你是资深保险观念故事创作者，善于用真实感强的故事触动人心，传递保障理念。请用中文回复。');
+      document.getElementById('story-output').innerHTML = renderMd(text);
+    } catch(e) { document.getElementById('story-output').innerText = '生成失败：'+e.message; }
+    finally { setLoading('story-loading', 'story-result', 'btn-story', false); }
+  }
+
+  // ══ 话术转文案 ══
+  let selectedRebuttal = '';
+  function selectRebuttal(el) { document.querySelectorAll('#rebuttal-opts .quiz-option').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); selectedRebuttal = el.querySelector('.opt-main').textContent.trim(); }
+  async function generateRebuttal() {
+    if (!selectedRebuttal) { alert('请先选择一个客户异议！'); return; }
+    setLoading('rebuttal-loading', 'rebuttal-result', 'btn-rebuttal', true); document.getElementById('rebuttal-result').style.display = 'none';
+    try {
+      const text = await callAPI([{ role: 'user', content: '把以下客户异议转化成一篇保险代理人的视频口播文案：\n客户异议：「'+selectedRebuttal+'」\n目标受众：'+document.getElementById('rebuttal-audience').value+'\n\n要求：\n1. 不要直接反驳，用故事和事实来引导\n2. 站在观众角度，共情他们的想法\n3. 通过对比故事自然化解偏见\n4. 不提具体产品和参数\n5. 语言温暖有力，不说教\n6. 80秒左右，有时间轴' }], '你是资深保险自媒体文案专家，善于用温暖有力的内容化解大众对保险的误解。请用中文回复。');
+      document.getElementById('rebuttal-output').innerHTML = renderMd(text);
+    } catch(e) { document.getElementById('rebuttal-output').innerText = '生成失败：'+e.message; }
+    finally { setLoading('rebuttal-loading', 'rebuttal-result', 'btn-rebuttal', false); }
+  }
+
+  // ══ 数据复盘 ══
+  let entryCount = 1;
+  function addEntry() {
+    entryCount++;
+    const div = document.createElement('div'); div.className = 'data-entry';
+    div.innerHTML = '<div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:10px">视频 '+entryCount+'</div><label>视频主题</label><input type="text" class="entry-topic" placeholder="例如：重疾险的重要性"><div class="data-grid"><div class="data-item"><label>播放量</label><input type="text" class="entry-views"></div><div class="data-item"><label>完播率</label><input type="text" class="entry-completion"></div><div class="data-item"><label>3s播放率</label><input type="text" class="entry-3s"></div><div class="data-item"><label>平均时长</label><input type="text" class="entry-avgtime"></div><div class="data-item"><label>点赞数</label><input type="text" class="entry-likes"></div><div class="data-item"><label>新增关注</label><input type="text" class="entry-follows"></div></div><div class="divider"></div>';
+    document.getElementById('data-entries').appendChild(div);
+  }
+  async function analyzeData() {
+    let dataText = ''; document.querySelectorAll('.data-entry').forEach((entry, i) => { dataText += '视频'+(i+1)+'：'+(entry.querySelector('.entry-topic')?.value||'未填写')+'\n播放量：'+(entry.querySelector('.entry-views')?.value||'-')+' | 完播率：'+(entry.querySelector('.entry-completion')?.value||'-')+' | 3s：'+(entry.querySelector('.entry-3s')?.value||'-')+' | 均时：'+(entry.querySelector('.entry-avgtime')?.value||'-')+' | 点赞：'+(entry.querySelector('.entry-likes')?.value||'-')+' | 关注：'+(entry.querySelector('.entry-follows')?.value||'-')+'\n\n'; });
+    setLoading('data-loading', 'data-result', 'btn-data', true); document.getElementById('data-result').style.display = 'none';
+    try {
+      const text = await callAPI([{ role: 'user', content: '分析以下保险代理人视频号数据：\n\n'+dataText+'\n补充：'+(document.getElementById('data-extra').value||'无')+'\n\n请输出：\n1. 📊 数据诊断（哪类内容数据好，哪类差）\n2. 🔍 核心问题\n3. ✅ 做得好的地方\n4. 💡 下一条视频具体优化建议（结合保险内容特点）\n5. 🎯 保险内容如何提升完播率的建议\n\n基准：3s播放率60%+良好，完播率20%+良好。' }], '你是资深保险自媒体数据分析师，熟悉保险内容的传播规律。请用中文回复。');
+      document.getElementById('data-output').innerHTML = renderMd(text);
+    } catch(e) { document.getElementById('data-output').innerText = '分析失败：'+e.message; }
+    finally { setLoading('data-loading', 'data-result', 'btn-data', false); }
+  }
+
+  // ══ IP梳理 ══
+  const IP_TOTAL = 7; let ipStep = 1;
+  (function() { const d = document.getElementById('ip-dots'); for (let i=1;i<=IP_TOTAL;i++) { const dot = document.createElement('div'); dot.className='step-dot'+(i===1?' active':''); dot.id='ip-dot-'+i; d.appendChild(dot); } })();
+  function ipUpdateProgress() { document.getElementById('ip-progress').style.width = Math.round((ipStep-1)/IP_TOTAL*100)+'%'; for(let i=1;i<=IP_TOTAL;i++){const d=document.getElementById('ip-dot-'+i);if(d)d.className='step-dot'+(i<ipStep?' done':i===ipStep?' active':'');} }
+  function ipToggle(el) { el.classList.toggle('selected'); }
+  function ipSingle(el, id) { document.querySelectorAll('#'+id+' .quiz-option').forEach(o=>o.classList.remove('selected')); el.classList.add('selected'); }
+  function ipGetSelected(id) { return Array.from(document.querySelectorAll('#'+id+' .quiz-option.selected')).map(o=>o.querySelector('.opt-main')?.textContent?.trim()||'').join('、'); }
+  function ipNext(from) { document.getElementById('ip-step-'+from).classList.remove('active'); ipStep=from+1; document.getElementById('ip-step-'+ipStep).classList.add('active'); ipUpdateProgress(); document.getElementById('panel-ip').scrollIntoView({behavior:'smooth',block:'start'}); }
+  function ipPrev(from) { document.getElementById('ip-step-'+from).classList.remove('active'); ipStep=from-1; document.getElementById('ip-step-'+ipStep).classList.add('active'); ipUpdateProgress(); document.getElementById('panel-ip').scrollIntoView({behavior:'smooth',block:'start'}); }
+
+  async function generateIP() {
+    document.getElementById('ip-quiz-wrap').style.display='none'; document.getElementById('ip-loading').style.display='block'; document.getElementById('ip-result').style.display='none'; document.getElementById('btn-ip').disabled=true;
+    const profile = { 从业年限: ipGetSelected('ip-opts-1')||'未填写', 性别外形: ipGetSelected('ip-opts-2')||'未填写', 真实经历: ipGetSelected('ip-opts-3')||'未填写', 内容方向: ipGetSelected('ip-opts-4')||'未填写', 内容风格: ipGetSelected('ip-opts-5')||'未填写', 自媒体目标: ipGetSelected('ip-opts-6')||'未填写', 姓名昵称: document.getElementById('ip-name')?.value||'未填写', 目标客群: document.getElementById('ip-audience-input')?.value||'未填写', 最大差异化: document.getElementById('ip-diff')?.value||'未填写', 其他补充: document.getElementById('ip-extra')?.value||'无' };
+    try {
+      const text = await callAPI([{ role: 'user', content: '请帮我深度梳理以下保险代理人自媒体博主的IP定位：\n\n'+Object.entries(profile).map(([k,v])=>k+'：'+v).join('\n')+'\n\n请输出：\n1. 🎯 一句话IP定位\n2. 💡 核心差异化分析（为什么潜在客户会关注你而不是其他代理人）\n3. 📱 内容策略（主线内容/副线内容/获客线内容）\n4. 🗣️ 视频号主页简介（3个版本）\n5. 🎬 视频结尾自我介绍（2个版本）\n6. 🚀 前3个月内容建议\n7. ⚠️ 保险自媒体需要注意的合规红线' }], '你是资深保险自媒体IP策划顾问，服务过数百位保险代理人，深知保险内容的合规边界和传播规律。请用中文回复。');
+      document.getElementById('ip-output').innerHTML = renderMd(text);
+    } catch(e) { document.getElementById('ip-output').innerText = '生成失败：'+e.message; }
+    finally { document.getElementById('ip-loading').style.display='none'; document.getElementById('ip-result').style.display='block'; document.getElementById('btn-ip').disabled=false; }
+  }
+
+  function resetIP() { ipStep=1; document.querySelectorAll('.quiz-step').forEach(s=>s.classList.remove('active')); document.getElementById('ip-step-1').classList.add('active'); document.querySelectorAll('.quiz-option').forEach(o=>o.classList.remove('selected')); ['ip-name','ip-audience-input','ip-diff','ip-extra'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); document.getElementById('ip-result').style.display='none'; document.getElementById('ip-quiz-wrap').style.display='block'; ipUpdateProgress(); }
+  ipUpdateProgress();
+</script>
+</body>
+</html>
