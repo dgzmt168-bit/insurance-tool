@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+f<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -689,7 +689,7 @@
     setLoading('script-loading', 'script-result', 'btn-script', true); document.getElementById('script-result').style.display = 'none';
     try {
       const concept = document.getElementById('script-concept').value;
-      const text = await callAPI([{ role: 'user', content: '写一篇保险代理人视频号口播文案：\n选题：'+topic+'\n受众：'+document.getElementById('script-audience').value+'\n时长：'+document.getElementById('script-duration').value+'\n保险观念方向：'+(concept||'自动判断')+'\n人设：'+(document.getElementById('script-persona').value||'平安保险资深代理人')+'\n\n要求：\n1. 只讲保险观念和理念，不提任何具体产品名称和参数\n2. 用故事化方式开头，引发情感共鸣\n3. 结构：强钩子开头→引出观念→故事/案例→感悟→引导关注\n4. 语言口语化、有温度、不说教\n\n输出文案后用===PUBLISH===分隔输出封面标题和发布描述，再用===CHECK===分隔输出合规检查（检查是否有违规承诺收益、虚假宣传、产品参数等风险词）。' }], '你是资深保险自媒体文案专家，精通保险观念传播，善于用故事触动人心。文案不涉及具体产品参数，只传递保障理念。请用中文回复。');
+      const text = await callAPI([{ role: 'user', content: '写一篇保险代理人视频号口播文案：\n选题：'+topic+'\n受众：'+document.getElementById('script-audience').value+'\n时长：'+document.getElementById('script-duration').value+'\n保险观念方向：'+(concept||'自动判断')+'\n人设：'+(document.getElementById('script-persona').value||'平安保险资深代理人')+'\n\n爆款结构：\n【0-5秒】反常识钩子或强痛点开头，让人停下来（例："你知道吗，很多人辛苦存了一辈子的钱，一场病就全没了"）\n【5-15秒】用真实场景引发强烈共鸣，让观众觉得说的就是自己\n【15-20秒】留人钩：预告接下来的干货\n【20-60秒】用对比故事传递保险观念，有保障和没保障的两种人生\n【60-70秒】情感升华，引发思考\n【70-80秒】温暖结尾，引导关注，不说买保险，说多一份保障多一份安心\n\n要求：只讲观念不提产品参数，口语化有温度，标注时间轴\n\n输出文案后用===PUBLISH===分隔输出封面标题和发布描述，再用===CHECK===分隔输出合规检查。' }], '你是资深保险自媒体爆款文案专家，精通钩子设计和故事化表达。请用中文回复。');
       const s1 = text.indexOf('===PUBLISH==='), s2 = text.indexOf('===CHECK===');
       document.getElementById('script-output').innerHTML = renderMd(s1 > -1 ? text.slice(0, s1).trim() : text);
       document.getElementById('publish-output').innerHTML = renderMd(s1 > -1 ? (s2 > -1 ? text.slice(s1+13, s2).trim() : text.slice(s1+13).trim()) : '');
@@ -705,7 +705,7 @@
     if (!selectedStoryTheme) { alert('请先选择一个故事场景！'); return; }
     setLoading('story-loading', 'story-result', 'btn-story', true); document.getElementById('story-result').style.display = 'none';
     try {
-      const text = await callAPI([{ role: 'user', content: '请写一篇保险观念故事口播脚本：\n场景主题：'+selectedStoryTheme+'\n目标受众：'+document.getElementById('story-audience').value+'\n人设：'+(document.getElementById('story-persona').value||'平安保险代理人')+'\n\n要求：\n1. 用第一人称或旁观者视角讲一个真实感强的故事\n2. 不提任何保险产品名称和具体参数\n3. 通过故事自然传递"有保障"和"没保障"的对比\n4. 结尾引发思考，不说教，让观众自己得出结论\n5. 80秒左右，口语化\n6. 有时间轴标注' }], '你是资深保险观念故事创作者，善于用真实感强的故事触动人心，传递保障理念。请用中文回复。');
+      const text = await callAPI([{ role: 'user', content: '请写一篇保险观念故事口播脚本：\n场景主题：'+selectedStoryTheme+'\n目标受众：'+document.getElementById('story-audience').value+'\n人设：'+(document.getElementById('story-persona').value||'平安保险代理人')+'\n\n要求：\n1.【0-5秒】用一个让人意想不到的反转或数字开头，瞬间抓住注意力\n2.【5-20秒】用第一人称或旁观者视角，描述一个真实感极强的生活场景，让观众感同身受\n3.【20-50秒】通过故事自然呈现"有保障"和"没保障"的命运对比，不说教，让画面说话\n4.【50-65秒】情感升华，引发观众对自己处境的思考\n5.【65-80秒】温暖结尾，引导关注，不提买保险，只说"多一份准备"\n6. 不提任何保险产品名称和具体参数\n7. 口语化，有时间轴标注' }], '你是资深保险观念故事创作者，善于用真实感强的爆款故事触动人心。请用中文回复。');
       document.getElementById('story-output').innerHTML = renderMd(text);
     } catch(e) { document.getElementById('story-output').innerText = '生成失败：'+e.message; }
     finally { setLoading('story-loading', 'story-result', 'btn-story', false); }
